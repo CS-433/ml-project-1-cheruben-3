@@ -12,13 +12,20 @@ def load_data(file_path):
     return ids, labels, feature_names, raw_features
 
 
-def standardize(x, column_means=None, column_stds=None):
-    """Standardize the columns of a data matrix x"""
+def standardize(x, columns=None, column_means=None, column_stds=None):
+    """In-place standardizing of the specified columns of a data matrix x"""
+    if columns is None:
+        columns = np.arange(x.shape[1])
+
+    specified_x = x[:, columns]
+
     if column_means is None:
-        column_means = np.mean(x, axis=0)
+        column_means = np.mean(specified_x, axis=0)
     if column_stds is None:
-        column_stds = np.std(x, axis=0)
-    return (x - column_means) / column_stds, column_means, column_stds
+        column_stds = np.std(specified_x, axis=0)
+
+    x[:, columns] = (specified_x - column_means) / column_stds
+    return column_means, column_stds
 
 
 def one_hot_encode(x, columns, feature_names):
