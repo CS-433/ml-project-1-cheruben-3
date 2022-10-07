@@ -8,5 +8,6 @@ For some background, physicists at CERN smash protons into one another at high s
 Since many decay signatures look similar, it is our job to estimate the likelihood that a given event’s signature was the result of a Higgs boson (signal) or some other process/particle (background). In practice, this means that we will be given a vector of features representing the decay signature of a collision event, and asked to predict whether this event was signal (a Higgs boson) or background (something else). To do this, we will use the binary classification techniques we have discussed in the lectures.
 
 ## Links
+- Overleaf: https://www.overleaf.com/read/yzksyvdpcgcg
 - Project AiCrowd page: https://www.aicrowd.com/challenges/epfl-machine-learning-higgs
 - In-depth description by HiggsML: https://higgsml.lal.in2p3.fr/files/2014/04/documentation_v1.8.pdf
