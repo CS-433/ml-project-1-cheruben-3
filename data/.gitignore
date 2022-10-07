@@ -1,0 +1,8 @@
+# Download data from https://www.aicrowd.com/challenges/epfl-machine-learning-higgs/dataset_files
+# and unzip it to this folder.
+
+# Ignore all files in this folder
+*
+
+# Except .gitignore
+!.gitignore
