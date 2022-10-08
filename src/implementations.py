@@ -1,7 +1,7 @@
 import numpy as np
 
 from helpers import batch_iter
-from losses import MSELoss, RidgeLoss
+from metrics import MSELoss, RidgeLoss
 
 from tqdm import tqdm
 
