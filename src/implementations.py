@@ -1,7 +1,7 @@
 import numpy as np
 
 from helpers import batch_iter
-from metrics import MSELoss, RidgeLoss
+from metrics import MSELoss, RidgeLoss, LogisticRegressionLoss, RegLogisticRegressionLoss
 
 from tqdm import tqdm
 
@@ -61,9 +61,36 @@ def ridge_regression(y: np.array, tx: np.array, lambda_: float) \
 
 def logistic_regression(y: np.array, tx: np.array, initial_w: np.array, max_iters: int, gamma: float) \
         -> (np.array, float):
-    pass
+    ws = [initial_w]
+    losses = []
+    w = initial_w
+
+    for n_iter in tqdm(range(max_iters)):
+        loss, grad = LogisticRegressionLoss.eval(tx, y, w)
+        w -= gamma * grad
+
+        ws.append(w)
+        losses.append(loss)
+        # print("GD iter. {bi}/{ti}: loss={l}, w0={w0}, w1={w1}".format(
+        #     bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
+
+    return ws[-1], losses[-1]
 
 
 def reg_logistic_regression(y: np.array, tx: np.array, lambda_: float, initial_w: np.array, max_iters: int, gamma: float
                             ) -> (np.array, float):
-    pass
+    ws = [initial_w]
+    losses = []
+    w = initial_w
+
+    for n_iter in range(max_iters):  # tqdm(range(max_iters)):
+        loss, grad = RegLogisticRegressionLoss.eval(tx, y, w, lambda_=lambda_)
+        print(grad)
+        w -= gamma * grad
+
+        ws.append(w)
+        losses.append(loss)
+        # print("GD iter. {bi}/{ti}: loss={l}, w0={w0}, w1={w1}".format(
+        #     bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
+
+    return ws[-1], losses[-1]

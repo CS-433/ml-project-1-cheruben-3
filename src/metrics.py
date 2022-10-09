@@ -96,3 +96,59 @@ class MAELoss(Loss):
         e = y - x @ w
         loss = np.mean(np.abs(e))
         return loss.item(), -1 / len(e) * (x.T @ np.sign(e))
+
+
+class RegLogisticRegressionLoss(Loss):
+    EPS = 1e-5
+
+    @staticmethod
+    def sigmoid(x: np.array) -> np.array:
+        return 1.0 / (1 + np.exp(-x))
+
+    @staticmethod
+    def loss(x: np.array, y: np.array, w: np.array, **kwargs) -> float:
+        y_pred = RegLogisticRegressionLoss.sigmoid(x @ w)
+        regularizer_loss = kwargs['lambda_'] * np.dot(w.T, w)
+        return y.T @ np.log(y_pred + RegLogisticRegressionLoss.EPS) + \
+               (1 - y.T) @ np.log(1 - y_pred + RegLogisticRegressionLoss.EPS) + regularizer_loss
+
+    @staticmethod
+    def grad(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
+        y_pred = RegLogisticRegressionLoss.sigmoid(x @ w)
+        regularizer_grad = 2 * kwargs['lambda_'] * w
+        return x.T @ (y_pred - y) + regularizer_grad
+
+    @staticmethod
+    def eval(x: np.array, y: np.array, w: np.array, **kwargs) -> (float, np.array):
+        # TODO: Code can be optimized
+        y_pred = RegLogisticRegressionLoss.sigmoid(x @ w)
+        loss = y.T @ np.log(y_pred + RegLogisticRegressionLoss.EPS) + \
+               (1 - y.T) @ np.log(1 - y_pred + RegLogisticRegressionLoss.EPS) + \
+               kwargs['lambda_'] * np.dot(w.T, w)
+        return loss.item(), -1 / x.T @ (y_pred - y) + 2 * kwargs['lambda_'] * w
+
+
+class LogisticRegressionLoss(Loss):
+    EPS = 1e-5
+
+    @staticmethod
+    def sigmoid(x: np.array) -> np.array:
+        return 1.0 / (1 + np.exp(-x))
+
+    @staticmethod
+    def loss(x: np.array, y: np.array, w: np.array, **kwargs) -> float:
+        y_pred = LogisticRegressionLoss.sigmoid(x @ w)
+        return y.T @ np.log(y_pred + LogisticRegressionLoss.EPS) + \
+               (1 - y.T) @ np.log(1 - y_pred + LogisticRegressionLoss.EPS)
+
+    @staticmethod
+    def grad(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
+        y_pred = LogisticRegressionLoss.sigmoid(x @ w)
+        return x.T @ (y_pred - y)
+
+    @staticmethod
+    def eval(x: np.array, y: np.array, w: np.array, **kwargs) -> (float, np.array):
+        y_pred = LogisticRegressionLoss.sigmoid(x @ w)
+        loss = y.T @ np.log(y_pred + LogisticRegressionLoss.EPS) + \
+               (1 - y.T) @ np.log(1 - y_pred + LogisticRegressionLoss.EPS)
+        return loss.item(), -1 / x.T @ (y_pred - y)
