@@ -5,15 +5,21 @@ import numpy as np
 
 def load_data(file_path: str) -> (np.array, np.array, np.array, np.array):
     """Load the raw data"""
-    feature_names = np.genfromtxt(file_path, delimiter=',', dtype=str, max_rows=1)[2:]
-    labels = np.genfromtxt(file_path, delimiter=',', usecols=[1], skip_header=1, dtype=str)
-    ids = np.genfromtxt(file_path, delimiter=',', usecols=[0], skip_header=1, dtype=int)
-    raw_features = np.genfromtxt(file_path, delimiter=',', skip_header=1)[:, 2:]
+    feature_names = np.genfromtxt(file_path, delimiter=",", dtype=str, max_rows=1)[2:]
+    labels = np.genfromtxt(
+        file_path, delimiter=",", usecols=[1], skip_header=1, dtype=str
+    )
+    ids = np.genfromtxt(file_path, delimiter=",", usecols=[0], skip_header=1, dtype=int)
+    raw_features = np.genfromtxt(file_path, delimiter=",", skip_header=1)[:, 2:]
     return ids, labels, feature_names, raw_features
 
 
-def standardize(x: np.array, columns: list[int] = None, column_means: np.array = None, column_stds: np.array = None) \
-        -> (np.array, np.array):
+def standardize(
+    x: np.array,
+    columns: list[int] = None,
+    column_means: np.array = None,
+    column_stds: np.array = None,
+) -> (np.array, np.array):
     """In-place standardizing of the specified columns of a data matrix x"""
     if columns is None:
         columns = np.arange(x.shape[1])
@@ -29,7 +35,9 @@ def standardize(x: np.array, columns: list[int] = None, column_means: np.array =
     return column_means, column_stds
 
 
-def one_hot_encode(x: np.array, columns: list[int], feature_names: np.array) -> (np.array, np.array):
+def one_hot_encode(
+    x: np.array, columns: list[int], feature_names: np.array
+) -> (np.array, np.array):
     # WARNING: Will NOT throw an error if the values are floats, it simply converts them
     # Make sure you are encoding the right columns!
 
@@ -53,7 +61,7 @@ def one_hot_encode(x: np.array, columns: list[int], feature_names: np.array) -> 
         max_col_val = maximum_value_per_col[i]
         for j in range(max_col_val + 1):
             # Add a new feature name for each possible value of the current column
-            new_feature_names.append(one_hot_col_names[i] + '_' + str(j))
+            new_feature_names.append(one_hot_col_names[i] + "_" + str(j))
         # Create the matrix of one-hot encodings for this feature
         one_hot_matrix = np.zeros((len(one_hot_col), max_col_val + 1))
         one_hot_matrix[np.arange(len(one_hot_col)), one_hot_col] = 1
@@ -65,7 +73,9 @@ def one_hot_encode(x: np.array, columns: list[int], feature_names: np.array) -> 
             new_features = one_hot_matrix
 
     # Return the concatenated old features with the new one-hot encoded features, do the same for the column names
-    return np.concatenate([x, new_features], axis=1), np.concatenate([feature_names, new_feature_names], axis=0)
+    return np.concatenate([x, new_features], axis=1), np.concatenate(
+        [feature_names, new_feature_names], axis=0
+    )
 
 
 def batch_iter(x, y, batch_size, num_batches=1, shuffle=True):
