@@ -14,6 +14,7 @@ FUNCTIONS = [
     "reg_logistic_regression",
 ]
 
+
 MAX_ITERS = 2
 GAMMA = 0.1
 
@@ -197,10 +198,6 @@ def test_logistic_regression(student_implementations, y, tx, initial_w):
     expected_loss = 1.348358
     expected_w = np.array([[0.378561], [0.801131]])
 
-    print(w, expected_w)
-
-    print(loss, expected_loss)
-
     np.testing.assert_allclose(loss, expected_loss, rtol=RTOL, atol=ATOL)
     np.testing.assert_allclose(w, expected_w, rtol=RTOL, atol=ATOL)
     assert loss.ndim == 0
@@ -214,7 +211,7 @@ def test_reg_logistic_regression(student_implementations, y, tx, initial_w):
         y, tx, lambda_, initial_w, MAX_ITERS, GAMMA
     )
 
-    expected_loss = 1.237635
+    expected_loss = 0.972165
     expected_w = np.array([[0.216062], [0.467747]])
 
     np.testing.assert_allclose(loss, expected_loss, rtol=RTOL, atol=ATOL)
@@ -231,7 +228,7 @@ def test_reg_logistic_regression_0_step(student_implementations, y, tx):
         y, tx, lambda_, expected_w, 0, GAMMA
     )
 
-    expected_loss = 2.287028
+    expected_loss = 1.407327
 
     np.testing.assert_allclose(loss, expected_loss, rtol=RTOL, atol=ATOL)
     np.testing.assert_allclose(w, expected_w, rtol=RTOL, atol=ATOL)

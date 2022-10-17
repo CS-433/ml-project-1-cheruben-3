@@ -88,18 +88,7 @@ class RegLogisticRegressionLoss(Loss):
 
     @staticmethod
     def loss(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        y_pred = RegLogisticRegressionLoss.sigmoid(x @ w)
-        regularizer_loss = kwargs["lambda_"] * np.dot(w.T, w)
-        total_loss = (
-            -1
-            / len(y)
-            * (
-                y.T @ np.log(y_pred + RegLogisticRegressionLoss.EPS)
-                + (1 - y.T) @ np.log(1 - y_pred + RegLogisticRegressionLoss.EPS)
-            )
-            + regularizer_loss
-        )
-        return np.array(total_loss.item())
+        return LogisticRegressionLoss.loss(x, y, w)
 
     @staticmethod
     def grad(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
