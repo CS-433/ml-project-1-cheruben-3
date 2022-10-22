@@ -18,7 +18,7 @@ def standardize(
     x: np.array,
     columns: list[int] = None,
     column_means: np.array = None,
-    column_stds: np.array = None,
+    column_stds: np.array = None
 ) -> (np.array, np.array):
     """In-place standardizing of the specified columns of a data matrix x"""
     if columns is None:
@@ -27,9 +27,9 @@ def standardize(
     specified_x = x[:, columns]
 
     if column_means is None:
-        column_means = np.mean(specified_x, axis=0)
+        column_means = np.nanmean(specified_x, axis=0)
     if column_stds is None:
-        column_stds = np.std(specified_x, axis=0)
+        column_stds = np.nanstd(specified_x, axis=0)
 
     x[:, columns] = (specified_x - column_means) / column_stds
     return column_means, column_stds
