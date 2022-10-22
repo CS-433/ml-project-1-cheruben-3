@@ -16,10 +16,14 @@ def confusion_matrix_statistics(
 
     accuracy = (tp + tn) / (tp + tn + fp + fn)
     recall = tp / (tp + fn)  # The number of true positives over all positives
-    precision = tp / (
-        tp + fp
-    )  # The number of true positives over all positive predictions
-    f1_score = 2 * (precision * recall) / (precision + recall)
+    if tp + fp == 0:
+        precision = 0
+    else:
+        precision = tp / (tp + fp)  # The number of true positives over all positive predictions
+    if precision == 0 and recall == 0:
+        f1_score = 0
+    else:
+        f1_score = 2 * (precision * recall) / (precision + recall)
     fpr = fp / (fp + tn)  # The number of false positives over all negatives
 
     return tp, fp, fn, tn, accuracy, recall, precision, f1_score, fpr
@@ -80,7 +84,7 @@ class MAELoss(Loss):
 
 
 class RegLogisticRegressionLoss(Loss):
-    EPS = 0
+    EPS = 1E-8
 
     @staticmethod
     def sigmoid(x: np.array) -> np.array:
@@ -98,7 +102,7 @@ class RegLogisticRegressionLoss(Loss):
 
 
 class LogisticRegressionLoss(Loss):
-    EPS = 0
+    EPS = 1E-8
 
     @staticmethod
     def sigmoid(x: np.array) -> np.array:

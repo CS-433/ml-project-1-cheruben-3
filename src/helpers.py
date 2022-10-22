@@ -14,11 +14,19 @@ def load_data(file_path: str) -> (np.array, np.array, np.array, np.array):
     return ids, labels, feature_names, raw_features
 
 
+def train_test_split(X, y, train_proportion):
+    assert X.shape[0] == y.shape[0]
+    indices = np.random.permutation(X.shape[0])
+    cutoff_idx = int(indices.shape[0] * train_proportion)
+    train_idx, test_idx = indices[:cutoff_idx], indices[cutoff_idx:]
+    return X[train_idx], X[test_idx], y[train_idx], y[test_idx]
+
+
 def standardize(
-    x: np.array,
-    columns: list[int] = None,
-    column_means: np.array = None,
-    column_stds: np.array = None
+        x: np.array,
+        columns: list[int] = None,
+        column_means: np.array = None,
+        column_stds: np.array = None
 ) -> (np.array, np.array):
     """In-place standardizing of the specified columns of a data matrix x"""
     if columns is None:
@@ -36,7 +44,7 @@ def standardize(
 
 
 def one_hot_encode(
-    x: np.array, columns: list[int], feature_names: np.array
+        x: np.array, columns: list[int], feature_names: np.array
 ) -> (np.array, np.array):
     # WARNING: Will NOT throw an error if the values are floats, it simply converts them
     # Make sure you are encoding the right columns!

@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tqdm
 
 from helpers import batch_iter
 from metrics import (
@@ -148,7 +149,7 @@ def reg_logistic_regression(
     losses = [RegLogisticRegressionLoss.loss(tx, y, initial_w, lambda_=lambda_)]
     w = initial_w
 
-    for n_iter in range(max_iters):
+    for n_iter in tqdm(range(max_iters)):
         grad = RegLogisticRegressionLoss.grad(tx, y, w, lambda_=lambda_)
         w -= gamma * grad
 
