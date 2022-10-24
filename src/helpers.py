@@ -21,6 +21,117 @@ def train_test_split(X, y, train_proportion):
     train_idx, test_idx = indices[:cutoff_idx], indices[cutoff_idx:]
     return X[train_idx], X[test_idx], y[train_idx], y[test_idx]
 
+# Given in lab 4
+def build_k_indices(X, y, k_fold, seed):
+    """build k indices for k-fold.
+    
+    Args:
+        X:      shape=(250000, 33)
+        y:      shape=(250000, 1)
+        k_fold: K in K-fold, i.e. the fold num
+        seed:   the random seed
+
+    Returns:
+        A 2D array of shape=(k_fold, N/k_fold) that indicates the data indices for each fold
+
+    >>> build_k_indices(np.array([1., 2., 3., 4.]), 2, 1)
+    array([[3, 2],
+           [0, 1]])
+    """
+    assert X.shape[0] == y.shape[0]
+    num_row = y.shape[0]
+    interval = int(num_row / k_fold)
+    np.random.seed(seed)
+    indices = np.random.permutation(num_row)
+    k_indices = [indices[k * interval: (k + 1) * interval] for k in range(k_fold)]
+    return np.array(k_indices)
+
+# Cross-validation function
+'''
+def cross_validation(X, y, k_indices, k, method, param):
+    """return the loss of methods for a fold corresponding to k_indices
+    
+    Args:
+        X:          shape=(250000, 33)
+        y:          shape=(250000, 1)
+        k_indices:  2D array returned by build_k_indices()
+        k:          scalar, the k-th fold (N.B.: not to confused with k_fold which is the fold nums)
+        method:     function we are going to test
+        param:      dictionary parameters for such method
+
+    Returns:
+        train and test losses and w 
+
+    """
+
+    # First we divide the data between the train and test set obtained in k_indices
+    ### Test_idx is k_indices[k] and train_idx is the rest of the indexes in a list 
+    test_idx = k_indices[k]
+    train_idx = k_indices[np.arange(len(k_indices)) != k].reshape(-1)
+    ### We proceed with the division
+    X_train, X_test, Y_train, Y_test = X[train_idx], X[test_idx], y[train_idx], y[test_idx]
+
+    # After this, we test the method
+    if (method.__name__ == 'mean_squared_error_gd'):
+        w, loss = method(Y_train, X_train, initial_w=param["initial_w"], max_iters=param["max_iters"], gamma=param["gamma"])
+
+    elif (method.__name__ == 'mean_squared_error_sgd'):
+        w, loss = method(Y_train, X_train, initial_w=param["initial_w"], max_iters=param["max_iters"], gamma=param["gamma"])
+
+    elif (method.__name__ == 'least_squares'):
+        w, loss = method(Y_train, X_train)
+    
+    elif (method.__name__ == 'ridge_regression'):
+        w, loss = method(Y_train, X_train, lambda_=param["lambda_"])
+    
+    elif (method.__name__ == 'logistic_regression'):
+        w, loss = method(Y_train, X_train, initial_w=param["initial_w"], max_iters=param["max_iters"], gamma=param["gamma"])
+    
+    elif (method.__name__ == 'reg_logistic_regression'):
+        w, loss = method(Y_train, X_train, lambda_=param["lambda_"], initial_w=param["initial_w"], max_iters=param["max_iters"], gamma=param["gamma"])
+
+    else:
+        print("No such name")
+    return train_idx, test_idx
+
+'''
+# Real cross-validation function
+def cross_validation(X, y, k_fold, seed):
+    """return all subsets of training and test sets
+    
+    Args:
+        X:          shape=(250000, 33)
+        y:          shape=(250000, 1)
+        k-fold:     int with the number of k_folds used in build_k_indices()
+        seed:       int for the seed of randomize used in build_k_indices()
+
+    Returns:
+        Subsets of training and test sets
+
+    """
+
+    # First we get the k_indices:  2D array returned by build_k_indices()
+    k_indices = build_k_indices(X, y, k_fold, seed)
+
+    X_train_sets = []
+    X_test_sets = []
+    Y_train_sets = []
+    Y_test_sets = []
+    # We get all the sets of the k_folds
+    for k in range(k_fold):
+
+        # Division of the data into the train and test set obtained in k_indices with build_k_indices
+        ### Test_idx is k_indices[k] and train_idx is the rest of the indexes in a list 
+        test_idx = k_indices[k]
+        train_idx = k_indices[np.arange(len(k_indices)) != k].reshape(-1)
+        ### We proceed with the division
+        X_train_sets.append(X[train_idx])
+        X_test_sets.append(X[test_idx])
+        Y_train_sets.append(y[train_idx])
+        Y_test_sets.append(y[test_idx])
+
+    return X_train_sets, X_test_sets, Y_test_sets, Y_test_sets
+
 
 def standardize(
         x: np.array,
