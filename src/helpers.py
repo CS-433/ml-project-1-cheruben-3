@@ -21,10 +21,11 @@ def train_test_split(X, y, train_proportion):
     train_idx, test_idx = indices[:cutoff_idx], indices[cutoff_idx:]
     return X[train_idx], X[test_idx], y[train_idx], y[test_idx]
 
+
 # Given in lab 4
 def build_k_indices(X, y, k_fold, seed):
     """build k indices for k-fold.
-    
+
     Args:
         X:      shape=(250000, 33)
         y:      shape=(250000, 1)
@@ -43,8 +44,9 @@ def build_k_indices(X, y, k_fold, seed):
     interval = int(num_row / k_fold)
     np.random.seed(seed)
     indices = np.random.permutation(num_row)
-    k_indices = [indices[k * interval: (k + 1) * interval] for k in range(k_fold)]
+    k_indices = [indices[k * interval : (k + 1) * interval] for k in range(k_fold)]
     return np.array(k_indices)
+
 
 # Cross-validation function
 '''
@@ -98,7 +100,7 @@ def cross_validation(X, y, k_indices, k, method, param):
 # Real cross-validation function
 def cross_validation(X, y, k_fold, seed):
     """return all subsets of training and test sets
-    
+
     Args:
         X:          shape=(250000, 33)
         y:          shape=(250000, 1)
@@ -121,7 +123,7 @@ def cross_validation(X, y, k_fold, seed):
     for k in range(k_fold):
 
         # Division of the data into the train and test set obtained in k_indices with build_k_indices
-        ### Test_idx is k_indices[k] and train_idx is the rest of the indexes in a list 
+        ### Test_idx is k_indices[k] and train_idx is the rest of the indexes in a list
         test_idx = k_indices[k]
         train_idx = k_indices[np.arange(len(k_indices)) != k].reshape(-1)
         ### We proceed with the division
@@ -134,10 +136,10 @@ def cross_validation(X, y, k_fold, seed):
 
 
 def standardize(
-        x: np.array,
-        columns: list[int] = None,
-        column_means: np.array = None,
-        column_stds: np.array = None
+    x: np.array,
+    columns: list[int] = None,
+    column_means: np.array = None,
+    column_stds: np.array = None,
 ) -> (np.array, np.array):
     """In-place standardizing of the specified columns of a data matrix x"""
     if columns is None:
@@ -155,7 +157,7 @@ def standardize(
 
 
 def one_hot_encode(
-        x: np.array, columns: list[int], feature_names: np.array
+    x: np.array, columns: list[int], feature_names: np.array
 ) -> (np.array, np.array):
     # WARNING: Will NOT throw an error if the values are floats, it simply converts them
     # Make sure you are encoding the right columns!

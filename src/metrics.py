@@ -19,7 +19,9 @@ def confusion_matrix_statistics(
     if tp + fp == 0:
         precision = 0
     else:
-        precision = tp / (tp + fp)  # The number of true positives over all positive predictions
+        precision = tp / (
+            tp + fp
+        )  # The number of true positives over all positive predictions
     if precision == 0 and recall == 0:
         f1_score = 0
     else:
@@ -84,7 +86,7 @@ class MAELoss(Loss):
 
 
 class RegLogisticRegressionLoss(Loss):
-    EPS = 1E-8
+    EPS = 1e-8
 
     @staticmethod
     def sigmoid(x: np.array) -> np.array:
@@ -102,7 +104,7 @@ class RegLogisticRegressionLoss(Loss):
 
 
 class LogisticRegressionLoss(Loss):
-    EPS = 1E-8
+    EPS = 1e-8
 
     @staticmethod
     def sigmoid(x: np.array) -> np.array:
