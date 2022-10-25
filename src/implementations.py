@@ -114,6 +114,7 @@ def reg_logistic_regression(
     initial_w: np.array,
     max_iters: int,
     gamma: float,
+    return_all_losses: bool = False
 ) -> (np.array, float):
     """
     :param y:
@@ -126,11 +127,65 @@ def reg_logistic_regression(
     """
     w = initial_w
 
+    if return_all_losses:
+        losses = [RegLogisticRegressionLoss.loss(tx, y, w, lambda_=lambda_)]
+
     for n_iter in tqdm(range(max_iters)):
         grad = RegLogisticRegressionLoss.grad(tx, y, w, lambda_=lambda_)
         w -= gamma * grad
 
+        if return_all_losses:
+         losses.append(RegLogisticRegressionLoss.loss(tx, y, w, lambda_=lambda_))
         # print("GD iter. {bi}/{ti}: loss={l}, w0={w0}, w1={w1}".format(
         #     bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
 
-    return w, RegLogisticRegressionLoss.loss(tx, y, w, lambda_=lambda_)
+    if return_all_losses:
+        return w, RegLogisticRegressionLoss.loss(tx, y, w, lambda_=lambda_), losses
+    else:
+        return w, RegLogisticRegressionLoss.loss(tx, y, w, lambda_=lambda_)
+
+
+def reg_logistic_regression_AGDR(
+    y: np.array,
+    tx: np.array,
+    lambda_: float,
+    initial_w: np.array,
+    max_iters: int,
+    gamma: float,
+    return_all_losses: bool = False
+) -> (np.array, float):
+    """
+    :param y:
+    :param tx:
+    :param lambda_:
+    :param initial_w:
+    :param max_iters:
+    :param gamma:
+    :return:
+    """
+    w = v = initial_w
+    t = 1
+
+    if return_all_losses:
+        losses = [RegLogisticRegressionLoss.loss(tx, y, w, lambda_=lambda_)]
+
+    for _ in tqdm(range(max_iters)):
+        next_w = v - gamma * RegLogisticRegressionLoss.grad(tx, y, v, lambda_=lambda_)
+
+        if RegLogisticRegressionLoss.loss(tx, y, w, lambda_=lambda_) < RegLogisticRegressionLoss.loss(tx, y, next_w, lambda_=lambda_):
+            v = w
+            t = 1
+            next_w = v - gamma * RegLogisticRegressionLoss.grad(tx, y, v, lambda_=lambda_)
+
+        next_t = (1 + (1 + 4 * t**2)**0.5) / 2
+        next_v = next_w + ((t - 1)/next_t) * (next_w - w)
+
+        w, v, t = next_w, next_v, next_t
+
+        if return_all_losses:
+            losses.append(RegLogisticRegressionLoss.loss(tx, y, w, lambda_=lambda_))
+
+    if return_all_losses:
+        return w, RegLogisticRegressionLoss.loss(tx, y, w, lambda_=lambda_), losses
+    else:
+        return w, RegLogisticRegressionLoss.loss(tx, y, w, lambda_=lambda_)
