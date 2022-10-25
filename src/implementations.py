@@ -76,7 +76,7 @@ def ridge_regression(y: np.array, tx: np.array, lambda_: float) -> (np.array, fl
     :return:
     """
     regularizer_part = 2 * len(y) * lambda_ * np.eye(tx.shape[1])
-    w_optim = np.linalg.inv(tx.T @ tx + regularizer_part) @ tx.T @ y
+    w_optim = np.linalg.solve(tx.T @ tx + regularizer_part, tx.T @ y)
     return w_optim, RidgeLoss.loss(tx, y, w_optim, lambda_=lambda_)
 
 
