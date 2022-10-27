@@ -49,8 +49,8 @@ def build_k_indices(X, y, k_fold, seed):
 
 
 # Cross-validation function
-'''
-def cross_validation(X, y, k_indices, k, method, param):
+
+def cross_validation_method(X, y, k_indices, k, method, param):
     """return the loss of methods for a fold corresponding to k_indices
     
     Args:
@@ -72,31 +72,24 @@ def cross_validation(X, y, k_indices, k, method, param):
     train_idx = k_indices[np.arange(len(k_indices)) != k].reshape(-1)
     ### We proceed with the division
     X_train, X_test, Y_train, Y_test = X[train_idx], X[test_idx], y[train_idx], y[test_idx]
-
+    print(X_train.dtype)
+    print(Y_train.dtype)
+    losses = []
     # After this, we test the method
-    if (method.__name__ == 'mean_squared_error_gd'):
-        w, loss = method(Y_train, X_train, initial_w=param["initial_w"], max_iters=param["max_iters"], gamma=param["gamma"])
 
-    elif (method.__name__ == 'mean_squared_error_sgd'):
-        w, loss = method(Y_train, X_train, initial_w=param["initial_w"], max_iters=param["max_iters"], gamma=param["gamma"])
-
-    elif (method.__name__ == 'least_squares'):
-        w, loss = method(Y_train, X_train)
-    
-    elif (method.__name__ == 'ridge_regression'):
+    if (method.__name__ == 'ridge_regression'):
         w, loss = method(Y_train, X_train, lambda_=param["lambda_"])
-    
-    elif (method.__name__ == 'logistic_regression'):
-        w, loss = method(Y_train, X_train, initial_w=param["initial_w"], max_iters=param["max_iters"], gamma=param["gamma"])
-    
+        losses.append(loss)
+
     elif (method.__name__ == 'reg_logistic_regression'):
-        w, loss = method(Y_train, X_train, lambda_=param["lambda_"], initial_w=param["initial_w"], max_iters=param["max_iters"], gamma=param["gamma"])
+        w, loss = method(Y_train, X_train, lambda_=param["lambda_"], initial_w=np.zeros(shape=(X_train.shape[1], 1)), max_iters=param["max_iters"], gamma=param["gamma"])
+        losses.append(loss)
 
     else:
         print("No such name")
-    return train_idx, test_idx
 
-'''
+
+    return losses
 
 
 # Real cross-validation function
@@ -133,7 +126,7 @@ def cross_validation(X, y, k_fold, seed):
         Y_train_sets.append(y[train_idx])
         Y_test_sets.append(y[test_idx])
 
-    return X_train_sets, X_test_sets, Y_test_sets, Y_test_sets
+    return X_train_sets, X_test_sets, Y_train_sets, Y_test_sets
 
 
 def standardize(
