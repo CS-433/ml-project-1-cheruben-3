@@ -44,7 +44,7 @@ def build_k_indices(X, y, k_fold, seed):
     interval = int(num_row / k_fold)
     np.random.seed(seed)
     indices = np.random.permutation(num_row)
-    k_indices = [indices[k * interval : (k + 1) * interval] for k in range(k_fold)]
+    k_indices = [indices[k * interval: (k + 1) * interval] for k in range(k_fold)]
     return np.array(k_indices)
 
 
@@ -97,6 +97,8 @@ def cross_validation(X, y, k_indices, k, method, param):
     return train_idx, test_idx
 
 '''
+
+
 # Real cross-validation function
 def cross_validation(X, y, k_fold, seed):
     """return all subsets of training and test sets
@@ -121,7 +123,6 @@ def cross_validation(X, y, k_fold, seed):
     Y_test_sets = []
     # We get all the sets of the k_folds
     for k in range(k_fold):
-
         # Division of the data into the train and test set obtained in k_indices with build_k_indices
         ### Test_idx is k_indices[k] and train_idx is the rest of the indexes in a list
         test_idx = k_indices[k]
@@ -136,10 +137,10 @@ def cross_validation(X, y, k_fold, seed):
 
 
 def standardize(
-    x: np.array,
-    columns: list[int] = None,
-    column_means: np.array = None,
-    column_stds: np.array = None,
+        x: np.array,
+        columns: list[int] = None,
+        column_means: np.array = None,
+        column_stds: np.array = None,
 ) -> (np.array, np.array):
     """In-place standardizing of the specified columns of a data matrix x"""
     if columns is None:
@@ -156,8 +157,30 @@ def standardize(
     return column_means, column_stds
 
 
+def get_interaction_terms_columns(X: np.array, co_linear_threshold: float, verbose: bool = False):
+    corr_matrix = np.corrcoef(X, rowvar=False)
+    co_linear_feature_columns = []
+    for i in range(len(corr_matrix)):
+        for j in range(i, len(corr_matrix)):
+            if np.abs(corr_matrix[i][j]) >= co_linear_threshold:
+                co_linear_feature_columns.append((i, j))
+
+    return co_linear_feature_columns
+
+
+def add_interaction_terms_columns(X: np.array, co_linear_feature_columns: list):
+    X_co_linear_features = np.zeros(
+        (X.shape[0], X.shape[1] + len(co_linear_feature_columns)))
+    X_co_linear_features[:, :X.shape[1]] = X
+    start_idx = X.shape[1]
+    for i, (f1_idx, f2_idx) in enumerate(co_linear_feature_columns):
+        X_co_linear_features[:, start_idx + i] = X[:, f1_idx] * X[:, f2_idx]
+
+    return X_co_linear_features
+
+
 def one_hot_encode(
-    x: np.array, columns: list[int], feature_names: np.array
+        x: np.array, columns: list[int], feature_names: np.array
 ) -> (np.array, np.array):
     # WARNING: Will NOT throw an error if the values are floats, it simply converts them
     # Make sure you are encoding the right columns!
@@ -224,9 +247,10 @@ def batch_iter(x, y, batch_size, num_batches=1, shuffle=True):
         if start_index != end_index:
             yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
 
+
 def build_poly(x, degree):
     """Builds polynomial features"""
     res = x.copy()
-    for p in range(2, degree+1):
+    for p in range(2, degree + 1):
         res = np.concatenate((res, np.power(x, p)), axis=1)
     return res
