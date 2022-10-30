@@ -1,5 +1,4 @@
 import numpy as np
-from tqdm import tqdm
 
 from helpers import batch_iter
 from metrics import (
@@ -181,7 +180,7 @@ def reg_logistic_regression(
     if return_all_losses:
         losses = [RegLogisticRegressionLoss.loss(tx, y, w, lambda_=lambda_)]
 
-    for n_iter in tqdm(range(max_iters)):
+    for n_iter in range(max_iters):
         grad = RegLogisticRegressionLoss.grad(tx, y, w, lambda_=lambda_)
         w -= gamma * grad
 
@@ -238,7 +237,7 @@ def reg_logistic_regression_AGDR(
     if return_all_losses:
         losses = [RegLogisticRegressionLoss.loss(tx, y, w, lambda_=lambda_)]
 
-    for _ in tqdm(range(max_iters)):
+    for _ in range(max_iters):
         next_w = v - gamma * RegLogisticRegressionLoss.grad(tx, y, v, lambda_=lambda_)
 
         if RegLogisticRegressionLoss.loss(

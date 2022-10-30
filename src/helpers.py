@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """some helper functions."""
 import numpy as np
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 import seaborn as sns
 
 
@@ -107,16 +107,17 @@ def cross_validation_method(X, y, k_indices, k, method, param):
         losses.append(loss)
 
     elif (method.__name__ == 'reg_logistic_regression'):
-        w, loss = method(Y_train, X_train, lambda_=param["lambda_"], initial_w=np.zeros(shape=(X_train.shape[1], 1)), max_iters=param["max_iters"], gamma=param["gamma"])
+        w, loss = method(Y_train, X_train, lambda_=param["lambda_"], initial_w=np.zeros(shape=(X_train.shape[1], 1)),
+                         max_iters=param["max_iters"], gamma=param["gamma"])
         losses.append(loss)
 
     elif (method.__name__ == 'reg_logistic_regression_AGDR'):
-        w, loss = method(Y_train, X_train, lambda_=param["lambda_"], initial_w=np.zeros(shape=(X_train.shape[1], 1)), max_iters=param["max_iters"], gamma=param["gamma"])
+        w, loss = method(Y_train, X_train, lambda_=param["lambda_"], initial_w=np.zeros(shape=(X_train.shape[1], 1)),
+                         max_iters=param["max_iters"], gamma=param["gamma"])
         losses.append(loss)
 
     else:
         print("No such name")
-
 
     return losses
 
