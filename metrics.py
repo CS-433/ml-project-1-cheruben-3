@@ -58,10 +58,11 @@ class Loss:
     """
     Abstract class creating a representation of a loss function
     """
+
     @staticmethod
     @abstractmethod
     def loss(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        """ Defines a formula to calculate the loss of some loss function
+        """Defines a formula to calculate the loss of some loss function
 
         Args:
             x: The features of the samples
@@ -78,7 +79,7 @@ class Loss:
     @staticmethod
     @abstractmethod
     def grad(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        """ Defines a formula to calculate the gradient of some loss function with respect to the model's weights
+        """Defines a formula to calculate the gradient of some loss function with respect to the model's weights
 
         Args:
             x: The features of the samples
@@ -97,9 +98,10 @@ class MSELoss(Loss):
     """
     Implementation of the MSE loss function
     """
+
     @staticmethod
     def loss(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        """ Defines a formula to calculate the loss of MSE
+        """Defines a formula to calculate the loss of MSE
 
         Args:
             x: The features of the samples
@@ -116,7 +118,7 @@ class MSELoss(Loss):
 
     @staticmethod
     def grad(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        """ Defines a formula to calculate the gradient of the MSE loss with respect to the model's weights
+        """Defines a formula to calculate the gradient of the MSE loss with respect to the model's weights
 
         Args:
             x: The features of the samples
@@ -135,9 +137,10 @@ class RidgeLoss(Loss):
     """
     Implementation of the ridge regression's loss function
     """
+
     @staticmethod
     def loss(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        """ Defines a formula to calculate the loss of the ridge regression loss
+        """Defines a formula to calculate the loss of the ridge regression loss
 
         Args:
             x: The features of the samples
@@ -154,7 +157,7 @@ class RidgeLoss(Loss):
 
     @staticmethod
     def grad(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        """ Defines a formula to calculate the gradient of ridge regression's loss with respect to the model's weights
+        """Defines a formula to calculate the gradient of ridge regression's loss with respect to the model's weights
 
         Args:
             x: The features of the samples
@@ -174,9 +177,10 @@ class MAELoss(Loss):
     """
     Implementation of the MAE loss function
     """
+
     @staticmethod
     def loss(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        """ Defines a formula to calculate the loss of the MAE loss
+        """Defines a formula to calculate the loss of the MAE loss
 
         Args:
             x: The features of the samples
@@ -193,7 +197,7 @@ class MAELoss(Loss):
 
     @staticmethod
     def grad(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        """ Defines a formula to calculate the gradient of the MAE loss with respect to the model's weights
+        """Defines a formula to calculate the gradient of the MAE loss with respect to the model's weights
 
         Args:
             x: The features of the samples
@@ -230,7 +234,7 @@ class RegLogisticRegressionLoss(Loss):
 
     @staticmethod
     def loss(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        """ Defines a formula to calculate the loss for regularized logistic regression
+        """Defines a formula to calculate the loss for regularized logistic regression
 
         Args:
             x: The features of the samples
@@ -245,7 +249,7 @@ class RegLogisticRegressionLoss(Loss):
 
     @staticmethod
     def grad(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        """ Defines a formula to calculate the gradient of the regularized logistic loss with respect to the model's
+        """Defines a formula to calculate the gradient of the regularized logistic loss with respect to the model's
         weights
 
         Args:
@@ -285,7 +289,7 @@ class LogisticRegressionLoss(Loss):
 
     @staticmethod
     def loss(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        """ Defines a formula to calculate the loss for logistic regression
+        """Defines a formula to calculate the loss for logistic regression
 
         Args:
             x: The features of the samples
@@ -309,7 +313,7 @@ class LogisticRegressionLoss(Loss):
 
     @staticmethod
     def grad(x: np.array, y: np.array, w: np.array, **kwargs) -> np.array:
-        """ Defines a formula to calculate the gradient of the logistic loss with respect to the model's weights
+        """Defines a formula to calculate the gradient of the logistic loss with respect to the model's weights
 
         Args:
             x: The features of the samples

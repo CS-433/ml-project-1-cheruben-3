@@ -89,7 +89,7 @@ def least_squares(y: np.array, tx: np.array) -> (np.array, float):
 
 
 def ridge_regression(y: np.array, tx: np.array, lambda_: float) -> (np.array, float):
-    """Returns the least-squares approximation of a REGULARIZED linear regression model to find the optimal parameters 
+    """Returns the least-squares approximation of a REGULARIZED linear regression model to find the optimal parameters
     and final loss (note that lambda_ could be 0)
 
     Args:

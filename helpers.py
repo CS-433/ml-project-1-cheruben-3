@@ -72,14 +72,14 @@ def build_k_indices(X, y, k_fold, seed):
     interval = int(num_row / k_fold)
     np.random.seed(seed)
     indices = np.random.permutation(num_row)
-    k_indices = [indices[k * interval: (k + 1) * interval] for k in range(k_fold)]
+    k_indices = [indices[k * interval : (k + 1) * interval] for k in range(k_fold)]
     return np.array(k_indices)
 
 
 # Cross-validation method
 def cross_validation_method(X, y, k_indices, k, method, param):
     """return the loss of methods for a fold corresponding to k_indices
-    
+
     Args:
         X:          shape=(250000, 33)
         y:          shape=(250000, 1)
@@ -89,31 +89,48 @@ def cross_validation_method(X, y, k_indices, k, method, param):
         param:      dictionary parameters for such method
 
     Returns:
-        train losses  
+        train losses
 
     """
 
     # First we divide the data between the train and test set obtained in k_indices
-    ### Test_idx is k_indices[k] and train_idx is the rest of the indexes in a list 
+    ### Test_idx is k_indices[k] and train_idx is the rest of the indexes in a list
     test_idx = k_indices[k]
     train_idx = k_indices[np.arange(len(k_indices)) != k].reshape(-1)
     ### We proceed with the division
-    X_train, X_test, Y_train, Y_test = X[train_idx], X[test_idx], y[train_idx], y[test_idx]
+    X_train, X_test, Y_train, Y_test = (
+        X[train_idx],
+        X[test_idx],
+        y[train_idx],
+        y[test_idx],
+    )
     losses = []
     # After this, we test the method
 
-    if (method.__name__ == 'ridge_regression'):
+    if method.__name__ == "ridge_regression":
         w, loss = method(Y_train, X_train, lambda_=param["lambda_"])
         losses.append(loss)
 
-    elif (method.__name__ == 'reg_logistic_regression'):
-        w, loss = method(Y_train, X_train, lambda_=param["lambda_"], initial_w=np.zeros(shape=(X_train.shape[1], 1)),
-                         max_iters=param["max_iters"], gamma=param["gamma"])
+    elif method.__name__ == "reg_logistic_regression":
+        w, loss = method(
+            Y_train,
+            X_train,
+            lambda_=param["lambda_"],
+            initial_w=np.zeros(shape=(X_train.shape[1], 1)),
+            max_iters=param["max_iters"],
+            gamma=param["gamma"],
+        )
         losses.append(loss)
 
-    elif (method.__name__ == 'reg_logistic_regression_AGDR'):
-        w, loss = method(Y_train, X_train, lambda_=param["lambda_"], initial_w=np.zeros(shape=(X_train.shape[1], 1)),
-                         max_iters=param["max_iters"], gamma=param["gamma"])
+    elif method.__name__ == "reg_logistic_regression_AGDR":
+        w, loss = method(
+            Y_train,
+            X_train,
+            lambda_=param["lambda_"],
+            initial_w=np.zeros(shape=(X_train.shape[1], 1)),
+            max_iters=param["max_iters"],
+            gamma=param["gamma"],
+        )
         losses.append(loss)
 
     else:
@@ -160,10 +177,10 @@ def k_fold_division(X, y, k_fold, seed):
 
 
 def standardize(
-        x: np.array,
-        columns: list[int] = None,
-        column_means: np.array = None,
-        column_stds: np.array = None,
+    x: np.array,
+    columns: list[int] = None,
+    column_means: np.array = None,
+    column_stds: np.array = None,
 ) -> (np.array, np.array):
     """In-place standardizing of the specified columns of a data matrix x
 
@@ -196,7 +213,7 @@ def standardize(
 
 
 def get_interaction_terms_columns(X: np.array, co_linear_threshold: float):
-    """ Gets list of pairs of features that have an absolute correlation higher than a certain threshold
+    """Gets list of pairs of features that have an absolute correlation higher than a certain threshold
 
     Args:
         X: 2d numpy-array where rows represent samples and columns represent features
@@ -218,7 +235,7 @@ def get_interaction_terms_columns(X: np.array, co_linear_threshold: float):
 
 
 def add_interaction_terms_columns(X: np.array, co_linear_feature_columns: list):
-    """ Creates interaction term features of feature pairs that are considered collinear
+    """Creates interaction term features of feature pairs that are considered collinear
 
     Args:
         X: 2d numpy-array where rows represent samples and columns represent features
@@ -230,8 +247,9 @@ def add_interaction_terms_columns(X: np.array, co_linear_feature_columns: list):
         this array, but the array is extended by additional features from the interaction terms
     """
     X_co_linear_features = np.zeros(
-        (X.shape[0], X.shape[1] + len(co_linear_feature_columns)))
-    X_co_linear_features[:, :X.shape[1]] = X
+        (X.shape[0], X.shape[1] + len(co_linear_feature_columns))
+    )
+    X_co_linear_features[:, : X.shape[1]] = X
     start_idx = X.shape[1]
     for i, (f1_idx, f2_idx) in enumerate(co_linear_feature_columns):
         X_co_linear_features[:, start_idx + i] = X[:, f1_idx] * X[:, f2_idx]
@@ -240,7 +258,7 @@ def add_interaction_terms_columns(X: np.array, co_linear_feature_columns: list):
 
 
 def one_hot_encode(
-        x: np.array, columns: list[int], feature_names: np.array
+    x: np.array, columns: list[int], feature_names: np.array
 ) -> (np.array, np.array):
     """One-hot encodes certain categorical features
 
