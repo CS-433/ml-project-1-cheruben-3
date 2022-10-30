@@ -4,7 +4,19 @@ import numpy as np
 
 
 def load_data(file_path: str) -> (np.array, np.array, np.array, np.array):
-    """Load the raw data"""
+    """Loads the dataset from a specified path
+
+    Args:
+        file_path: string, the path to the dataset (csv-file)
+
+    Returns:
+        4-tuple of the following:
+        - A numpy array of IDs corresponding to each sample
+        - A numpy array containing the labels of the samples (Filled with '?' in case of the test set)
+        - A numpy array containing each feature's name
+        - A numpy array containing the features corresponding to each sample
+
+    """
     feature_names = np.genfromtxt(file_path, delimiter=",", dtype=str, max_rows=1)[2:]
     labels = np.genfromtxt(
         file_path, delimiter=",", usecols=[1], skip_header=1, dtype=str
@@ -15,6 +27,20 @@ def load_data(file_path: str) -> (np.array, np.array, np.array, np.array):
 
 
 def train_test_split(X, y, train_proportion):
+    """Decomposes (X,y) into (X_train, y_train) and (X_test, y_test) with a certain proportion
+
+    Args:
+        X: The features of the samples
+        y: The labels of the samples
+        train_proportion: Approximate proportion of datapoints to have in the training dataset v.s. the testing dataset
+
+    Returns:
+        4-tuple of the following:
+        - A numpy array representing the features of the samples used for training
+        - A numpy array representing the features of the samples used for testing
+        - A numpy array representing the labels of the samples used for training
+        - A numpy array representing the labels of the samples used for testing
+    """
     assert X.shape[0] == y.shape[0]
     indices = np.random.permutation(X.shape[0])
     cutoff_idx = int(indices.shape[0] * train_proportion)
@@ -142,7 +168,22 @@ def standardize(
         column_means: np.array = None,
         column_stds: np.array = None,
 ) -> (np.array, np.array):
-    """In-place standardizing of the specified columns of a data matrix x"""
+    """In-place standardizing of the specified columns of a data matrix x
+
+    Args:
+        x: 2d numpy-array where rows represent samples and columns represent features
+        columns: the specified column indices to standardize
+        column_means: if not empty, use these corresponding column means for standardization
+        (e.g. for standardizing test dataset according to train dataset distribution)
+        column_stds:if not empty, use these corresponding column standard deviations for standardization
+
+    Returns:
+        -> Does in-place standardization
+        2-tuple of the following:
+        - The mean of each column before standardizing
+        - The standard deviation of each column before standardizing
+
+    """
     if columns is None:
         columns = np.arange(x.shape[1])
 
@@ -157,7 +198,18 @@ def standardize(
     return column_means, column_stds
 
 
-def get_interaction_terms_columns(X: np.array, co_linear_threshold: float, verbose: bool = False):
+def get_interaction_terms_columns(X: np.array, co_linear_threshold: float):
+    """ Gets list of pairs of features that have an absolute correlation higher than a certain threshold
+
+    Args:
+        X: 2d numpy-array where rows represent samples and columns represent features
+        co_linear_threshold: the minimum correlation for a pair of features to be added to the return list
+
+    Returns:
+        List of tuples, where each element in a tuple represents the index of a feature, and the tuple represents
+        collinearity
+
+    """
     corr_matrix = np.corrcoef(X, rowvar=False)
     co_linear_feature_columns = []
     for i in range(len(corr_matrix)):
@@ -169,6 +221,17 @@ def get_interaction_terms_columns(X: np.array, co_linear_threshold: float, verbo
 
 
 def add_interaction_terms_columns(X: np.array, co_linear_feature_columns: list):
+    """ Creates interaction term features of feature pairs that are considered collinear
+
+    Args:
+        X: 2d numpy-array where rows represent samples and columns represent features
+        co_linear_feature_columns: List of tuples, where each element in a tuple represents the index of a feature,
+        and the tuple represents collinearity
+
+    Returns:
+        2d numpy-array where rows represent samples and columns represent features. The original data X is copied into
+        this array, but the array is extended by additional features from the interaction terms
+    """
     X_co_linear_features = np.zeros(
         (X.shape[0], X.shape[1] + len(co_linear_feature_columns)))
     X_co_linear_features[:, :X.shape[1]] = X
@@ -182,6 +245,17 @@ def add_interaction_terms_columns(X: np.array, co_linear_feature_columns: list):
 def one_hot_encode(
         x: np.array, columns: list[int], feature_names: np.array
 ) -> (np.array, np.array):
+    """One-hot encodes certain categorical features
+
+    Args:
+        x: 2d numpy-array where rows represent samples and columns represent features
+        columns: The columns that need to be one-hot encoded
+        feature_names: The names of the features that need to be ont-hot encoded (used to generate new column names)
+
+    Returns:
+        2d numpy-array where rows represent samples and columns represent features. The array remains identical to x,
+        but with features representing the one-hot encodings of columns replacing the column feature
+    """
     # WARNING: Will NOT throw an error if the values are floats, it simply converts them
     # Make sure you are encoding the right columns!
 
