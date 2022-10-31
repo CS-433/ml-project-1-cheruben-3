@@ -17,11 +17,13 @@ from metrics import LogisticRegressionLoss
 
 if __name__ == "__main__":
 
-    data_directory = "../data"
+    # THE DATASET SHOULD BE STORED IN THE DATA DIRECTORY
+    data_directory = ""
     train_dataset_path = os.path.join(data_directory, "data/train.csv")
     public_test_dataset_path = os.path.join(data_directory, "data/test.csv")
 
     # Loading the data
+    print('Loading the data...\n')
     _, Y_train_public, feature_names, X_train_public = load_data(train_dataset_path)
     ids_test_public, _, _, X_test_public = load_data(public_test_dataset_path)
 
