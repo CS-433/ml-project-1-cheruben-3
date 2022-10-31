@@ -18,7 +18,7 @@ The number of features provided for each vector are 30, from which 17 are raw qu
     ├── documents               # Documention given about project 1
     ├── experimenting           # Data analysis, tests and notebook of project
     ├── visualizations          # Plots based on observation of the data and 4-fold cross-validation
-    ├── .gitignore              # Data analysis, tests and notebook of project
+    ├── .gitignore              # Configuration settings
     ├── README.md               # Description of repository
     ├── helpers.py              # Data analysis, tests and notebook of project
     ├── implementations.py      # Plots based on observation of the data and 4-fold cross-validation
