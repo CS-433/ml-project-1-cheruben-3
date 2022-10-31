@@ -1,6 +1,6 @@
 # Machine Learning Project 1: Discovering the Higgs boson using machine learning
 
-## From the project introduction:
+## From the project introduction
 In this project, we will apply machine learning techniques to actual CERN particle accelerator data to recreate the process of “discovering” the Higgs particle.
 
 For some background, physicists at CERN smash protons into one another at high speeds to generate even smaller particles as by-products of the collisions. Rarely, these collisions can produce a Higgs boson. Since the Higgs boson decays rapidly into other particles, scientists don’t observe it directly, but rather measure its “decay signature”, or the products that result from its decay process.
@@ -31,7 +31,7 @@ The number of features provided for each vector are 30, from which 17 are raw qu
     │   └── .gitignore          # Git ignores files here
     └── ...
 
-> This is the folder where all the data files are stored. As it's written in the `.gitignore`, the data files have to be downloaded from <i> https://www.aicrowd.com/challenges/epfl-machine-learning-higgs/dataset_files </i> and unzipped here, so it can be called by the other files.
+> This is the folder where all the data files are stored. As it's written in the `.gitignore`, the data files have to be downloaded from <i> https://www.aicrowd.com/challenges/epfl-machine-learning-higgs/dataset_files </i> and unzipped here, so it can be called by the other files. Here it will also be stored the submission files created.
 
 ### Documents
     .
@@ -90,8 +90,6 @@ Jupyter notebook of the project where all the steps taken are explained: loading
 #### run.py
 > File with information similar to run.ipynb, but focus on replicating the best model obtained in the project and submitted.
 
-## Additional info
-??????????
 
 ## Links
 - Overleaf: https://www.overleaf.com/read/yzksyvdpcgcg
@@ -100,6 +98,6 @@ Jupyter notebook of the project where all the steps taken are explained: loading
 
 ## Credits
 
-Project carried out by Lars Quaedvlieg, Anton Pirhonen, Ana Serrano Leiva. 
+Project carried out by Lars Quaedvlieg, Anton Pirhonen and Ana Serrano Leiva. 
 
 Group CheRuben.

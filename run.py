@@ -13,7 +13,6 @@ from helpers import (
 from implementations import reg_logistic_regression_AGDR
 from metrics import LogisticRegressionLoss
 
-# PLEASE RUN FROM INSIDE THE "SRC" DIRECTORY
 
 if __name__ == "__main__":
 
